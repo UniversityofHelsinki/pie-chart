@@ -183,6 +183,7 @@ function pie(selector, data, titleText) {
       .style('font-weight', 'bold')
       .attr("x", legend_x)
       .attr("y", top_y + topTitleHeight - topTitleTextHeight / 1.5)
+      .attr("fill", "#222")
       .text(titleText)
       .attr("opacity", 0)
       .transition()
@@ -195,13 +196,13 @@ function pie(selector, data, titleText) {
       .style('font-weight', 'bold')
       .attr("x", width - legend_x)
       .attr("y", top_y + topTitleHeight - topTitleTextHeight / 1.5)
+      .attr("fill", "#222")
       .attr("text-anchor", "end")
       .text(totalValues)
       .attr("opacity", 0)
       .transition()
       .duration(500)
       .attr("opacity", 1);
-
 
     // add transition to new path
     g.datum(normalizedValues).selectAll("path")
