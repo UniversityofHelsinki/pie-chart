@@ -1,22 +1,36 @@
-var sampleData = [{
-  'Title': 'Kandidaatiksi',
-  'Value': 18691
-}, {
-  'Title': 'Maisteriksi',
-  'Value': 9494
-}, {
-  'Title': 'Lisensiaatiksi',
-  'Value': 235
-}, {
-  'Title': 'Tohtoriksi',
-  'Value': 4682
-}];
+var lang = 'en';
 
-pie("#pie-chart", sampleData, 'Opiskelijoita yht.');
+var sampleData = [
+  { 'Title': {'fi' :'Kandidaatiksi', 'en':'Bachelors', 'sv': 'Kandidat' }
+  , 'Value': 18691
+  },
+  { 'Title': {'fi':'Maisteriksi', 'en':'Masters', 'sv': 'Master' }
+  , 'Value': 9494
+  },
+  { 'Title': {'fi':'Lisensiaatiksi', 'en':'Licentiate', 'sv': 'Licentiat' }
+  , 'Value': 235
+  },
+  { 'Title': {'fi':'Tohtoriksi', 'en':'Ph.D.', 'sv':'Doktor' }
+  , 'Value': 4682
+  }
+];
+
+var localizedTitles = {'fi': 'Opiskelijoita yht.', 'en': 'Students total', 'sv': 'Studenter totalt'};
+
+sampleData = sampleData.map(function(d) {
+  return {
+    'Title': d['Title'][lang],
+    'Value': d['Value']
+  };
+});
+
+
+pie("#pie-chart", sampleData, localizedTitles);
 
 /* *** */
 
 function pie(selector, data, titleText) {
+  titleText = titleText[lang];
 
   var keys = makeKeys(data);
   var values = makeValues(data);
