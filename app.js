@@ -12,10 +12,10 @@ var sampleData = [{
   'Value': 4682
 }];
 
-pie("#pie-chart", sampleData, 'opiskelijaa');
+pie("#pie-chart", sampleData, 'Opiskelijoita yht.');
 
-// Hover touchista toglettava jotta sinne voidaan laittaa linkkejä,
-// linkistä pääsisi listaukseen jossa näytetään tietoja yhteistyöstä (tutkimukset(?)
+/* *** */
+
 function pie(selector, data, titleText) {
 
   var keys = makeKeys(data);
@@ -23,8 +23,7 @@ function pie(selector, data, titleText) {
   var totalValues = sum(values);
   var normalizedValues = normalize(values, totalValues);
 
-
-  var colors = ["#44a999", "#0f4073", "#89cbee", "#98cd65", "#7b46a2"  ];
+  var colors = ["#44a999", "#0f4073", "#89cbee", "#98cd65", "#7b46a2"];
 
   var color = d3.scale.ordinal().range(colors);
 
@@ -36,7 +35,6 @@ function pie(selector, data, titleText) {
       }
     });
   }
-
 
   function render() {
     var arcTween = function(a) {
@@ -51,19 +49,19 @@ function pie(selector, data, titleText) {
 
     // Measurements
     var width = pie.node().getBoundingClientRect().width;
-    var pieDiameter = width/3;
+    var pieDiameter = width/2.5;
 
-    var legendTextHeight = width/42;
-    var textSpacing = 2 * (legendTextHeight);
+    var legendTextHeight = width/24;
+    var textSpacing = 1.5 * (legendTextHeight);
 
     var topTitleTextHeight = legendTextHeight;
     var topTitleHeight = legendTextHeight * 1.2;
 
-    var legend_x = pieDiameter/2;
+    var legend_x = pieDiameter/1.75;
     var legendHeight = ((textSpacing * data.length) + topTitleHeight ) * 1.05;
     var height = Math.max(pieDiameter, legendHeight);
 
-    var top_y = -height/2.25;
+    var top_y = -height/2.4;
 
     // set the thickness of the inner and outer radii
     var oRadius = pieDiameter / 2 * 0.9;
@@ -71,7 +69,7 @@ function pie(selector, data, titleText) {
 
     var duration = 1000;
 
-    pie.selectAll('svg').remove()
+    pie.selectAll('svg').remove();
 
     var svg = pie
       .append("svg")
@@ -114,17 +112,39 @@ function pie(selector, data, titleText) {
       .data(data)
       .enter();
 
+
+    text.append("rect")
+      .attr("width", legendTextHeight)
+      .attr("height", legendTextHeight)
+      .attr("x", legend_x)
+      .attr("y", function(d, i) {
+        return top_y + (textSpacing * i) + topTitleHeight*1.2 + legendTextHeight/8;
+      })
+      .attr("fill", function(d, i) {
+        return color(i);
+      })
+      .text(function(d) {
+        return d['Title'];
+      })
+      .attr("opacity", 0)
+      .transition()
+      .duration(function(d, i) {
+        return duration - (1 - (i+1)/data.length)*duration;
+      })
+      .attr("opacity", 1) ;
+
+
     text.append("text")
       .style('font-family', 'Open Sans')
       .style('font-weight', 'bold')
       .style('font-size', legendTextHeight + 'px')
-      .attr("x", legend_x + 80)
+      .attr("x", width-legend_x)
       .attr("text-anchor", "end")
       .attr("y", function(d, i) {
-        return top_y + (textSpacing * i) + legendTextHeight + topTitleHeight ;
+        return top_y + (textSpacing * i) + legendTextHeight + topTitleHeight*1.2;
       })
       .attr("fill", function(d, i) {
-        return color(i);
+        return d3.hcl(color(i)).darker(1);
       })
       .text(function(d) {
         return d['Value'];
@@ -140,12 +160,12 @@ function pie(selector, data, titleText) {
       .style('font-family', 'Open Sans')
       .style('font-size', legendTextHeight + 'px')
       .style('font-weight', 'light')
-      .attr("x", legend_x + 100)
+      .attr("x", legend_x + legendTextHeight*1.5)
       .attr("y", function(d, i) {
-        return top_y + (textSpacing * i) + legendTextHeight + topTitleHeight;
+        return top_y + (textSpacing * i) + legendTextHeight + topTitleHeight*1.2;
       })
       .attr("fill", function(d, i) {
-        return color(i);
+        return d3.hcl(color(i)).darker(1);
       })
       .text(function(d) {
         return d['Title'];
@@ -155,16 +175,33 @@ function pie(selector, data, titleText) {
       .duration(function(d, i) {
         return duration - (1 - (i+1)/data.length)*duration;
       })
-      .attr("opacity", 1) ;
+      .attr("opacity", 1);
 
     g.append("text")
       .style('font-family', 'Open Sans')
       .style('font-size', topTitleTextHeight + 'px')
       .style('font-weight', 'bold')
-      .style('text-decoration', 'underline')
       .attr("x", legend_x)
-      .attr("y", top_y + topTitleHeight - topTitleTextHeight)
-      .text(totalValues + ' ' + titleText) ;
+      .attr("y", top_y + topTitleHeight - topTitleTextHeight / 1.5)
+      .text(titleText)
+      .attr("opacity", 0)
+      .transition()
+      .duration(500)
+      .attr("opacity", 1);
+
+    g.append("text")
+      .style('font-family', 'Open Sans')
+      .style('font-size', topTitleTextHeight + 'px')
+      .style('font-weight', 'bold')
+      .attr("x", width - legend_x)
+      .attr("y", top_y + topTitleHeight - topTitleTextHeight / 1.5)
+      .attr("text-anchor", "end")
+      .text(totalValues)
+      .attr("opacity", 0)
+      .transition()
+      .duration(500)
+      .attr("opacity", 1);
+
 
     // add transition to new path
     g.datum(normalizedValues).selectAll("path")
