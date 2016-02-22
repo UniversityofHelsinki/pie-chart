@@ -1,4 +1,5 @@
-var lang = 'en';
+/* Parameters */
+var lang = 'fi';
 
 var sampleData = [
   { 'Title': {'fi' :'Kandidaatiksi', 'en':'Bachelors', 'sv': 'Kandidat' }
@@ -16,28 +17,26 @@ var sampleData = [
 ];
 
 var localizedTitles = {'fi': 'Opiskelijoita yht.', 'en': 'Students total', 'sv': 'Studenter totalt'};
-
-sampleData = sampleData.map(function(d) {
-  return {
-    'Title': d['Title'][lang],
-    'Value': d['Value']
-  };
-});
-
-
-pie("#pie-chart", sampleData, localizedTitles);
+var colors = ["#44a999", "#0f4073", "#89cbee", "#98cd65", "#7b46a2"];
 
 /* *** */
 
-function pie(selector, data, titleText) {
+pie("#pie-chart", sampleData, localizedTitles);
+
+function pie(selector, data, titleText, dataset) {
+  data = data.map(function(d) {
+    return {
+      'Title': d['Title'][lang],
+      'Value': d['Value']
+    };
+  });
+
   titleText = titleText[lang];
 
   var keys = makeKeys(data);
   var values = makeValues(data);
   var totalValues = sum(values);
   var normalizedValues = normalize(values, totalValues);
-
-  var colors = ["#44a999", "#0f4073", "#89cbee", "#98cd65", "#7b46a2"];
 
   var color = d3.scale.ordinal().range(colors);
 
