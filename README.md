@@ -11,4 +11,4 @@ After downloading the repository, run bower install to install dependencies.
 To customize, alter the parameters in app.js.
 Serve the directory over HTTP and view in your browser to see an example of the application in action.
 
-This program is licenced under GPL V2. See LICENSE for more details.
+This program is licensed under GPL V2. See LICENSE for more details.
